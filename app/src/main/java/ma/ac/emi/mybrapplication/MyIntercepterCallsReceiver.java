@@ -39,7 +39,7 @@ public class MyIntercepterCallsReceiver extends BroadcastReceiver {
             //TO DO : afficher num d’appel et date/heure d’appel
             //Toast.makeText(context, "Appel received from : "+number + " at "+ callStartTime, Toast.LENGTH_SHORT).show();
 
-            MainActivity.showPhoneNumber(number,callStartTime);
+            //MainActivity.showPhoneNumber(number,callStartTime);
         }
     }
 }

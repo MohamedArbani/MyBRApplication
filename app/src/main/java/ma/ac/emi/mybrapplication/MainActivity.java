@@ -4,6 +4,7 @@ import static androidx.core.content.ContextCompat.getSystemService;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -11,12 +12,14 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.role.RoleManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.telephony.TelephonyManager;
@@ -72,6 +75,30 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         // Démarrez le service de filtrage d'appels
         startService(callScreeningIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            requestRole();
+        }
+    }
+
+    private static final int REQUEST_ID = 1;
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public void requestRole() {
+        RoleManager roleManager = (RoleManager) getSystemService(ROLE_SERVICE);
+        Intent intent = roleManager.createRequestRoleIntent(RoleManager.ROLE_CALL_SCREENING);
+        startActivityForResult(intent, REQUEST_ID);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ID) {
+            if (resultCode == Activity.RESULT_OK) {
+                // Your app is now the call screening app
+            } else {
+                // Your app is not the call screening app
+            }
+        }
     }
 
     @Override
